@@ -1,121 +1,129 @@
 <template>
-  <el-container class="layout-container">
-    <el-aside :width="isCollapse ? '64px' : '220px'" class="layout-aside">
-      <div class="logo-area" @click="$router.push('/dashboard')">
-        <div class="logo-icon">
-          <span class="logo-g">G</span>
-        </div>
-        <transition name="fade">
-          <span v-show="!isCollapse" class="logo-text">GlobalTrade</span>
-        </transition>
-      </div>
-      <el-menu
-        :default-active="activeMenu"
-        :collapse="isCollapse"
-        :collapse-transition="false"
-        router
-        background-color="transparent"
-        text-color="#8FA3BE"
-        active-text-color="#00D4FF"
-      >
-        <el-menu-item index="/dashboard">
-          <el-icon><DataBoard /></el-icon>
-          <template #title>{{ $t('nav.dashboard') }}</template>
-        </el-menu-item>
-
-        <el-sub-menu index="products-menu">
-          <template #title>
-            <el-icon><Goods /></el-icon>
-            <span>{{ $t('nav.products') }}</span>
-          </template>
-          <el-menu-item index="/products">{{ $t('nav.productList') }}</el-menu-item>
-          <el-menu-item index="/products/new">{{ $t('nav.productsNew') }}</el-menu-item>
-        </el-sub-menu>
-
-        <el-menu-item index="/orders">
-          <el-icon><List /></el-icon>
-          <template #title>{{ $t('nav.orderList') }}</template>
-        </el-menu-item>
-
-        <el-menu-item index="/analytics">
-          <el-icon><TrendCharts /></el-icon>
-          <template #title>{{ $t('nav.analytics') }}</template>
-        </el-menu-item>
-
-        <el-sub-menu index="selection-menu">
-          <template #title>
-            <el-icon><Search /></el-icon>
-            <span>{{ $t('nav.selection') }}</span>
-          </template>
-          <el-menu-item index="/selection/competitors">{{ $t('nav.competitors') }}</el-menu-item>
-          <el-menu-item index="/selection/trending">{{ $t('nav.trending') }}</el-menu-item>
-          <el-menu-item index="/selection/suggestions">{{ $t('nav.suggestions') }}</el-menu-item>
-        </el-sub-menu>
-
-        <el-menu-item index="/customers">
-          <el-icon><User /></el-icon>
-          <template #title>{{ $t('nav.customerList') }}</template>
-        </el-menu-item>
-
-        <el-sub-menu v-if="userStore.role === 'admin'" index="system-menu">
-          <template #title>
-            <el-icon><Setting /></el-icon>
-            <span>{{ $t('nav.system') }}</span>
-          </template>
-          <el-menu-item index="/system/users">{{ $t('nav.userManagement') }}</el-menu-item>
-          <el-menu-item index="/system/roles">{{ $t('nav.roleManagement') }}</el-menu-item>
-          <el-menu-item index="/system/logs">{{ $t('nav.operationLogs') }}</el-menu-item>
-        </el-sub-menu>
-      </el-menu>
-    </el-aside>
-
-    <el-container>
-      <el-header class="layout-header">
-        <div class="header-left">
-          <el-icon class="collapse-btn" :size="20" @click="isCollapse = !isCollapse">
-            <Fold v-if="!isCollapse" />
-            <Expand v-else />
-          </el-icon>
-          <el-breadcrumb separator="/">
-            <el-breadcrumb-item :to="{ path: '/dashboard' }">{{ $t('nav.dashboard') }}</el-breadcrumb-item>
-            <el-breadcrumb-item v-if="$route.meta.title">{{ $t('nav.' + $route.meta.title) }}</el-breadcrumb-item>
-          </el-breadcrumb>
-        </div>
-        <div class="header-right">
-          <el-dropdown trigger="click" @command="handleCommand">
-            <div class="lang-switch">
-              <el-icon><Location /></el-icon>
-              <span>{{ currentLang === 'zh' ? '中文' : 'EN' }}</span>
-            </div>
-          </el-dropdown>
-          <el-dropdown trigger="click" @command="handleUserCommand">
-            <div class="user-info">
-              <el-avatar :size="32" :style="{ background: 'linear-gradient(135deg, #00D4FF, #3B82F6)' }">
-                {{ userStore.userInfo?.nickname?.[0]?.toUpperCase() || 'U' }}
-              </el-avatar>
-              <span class="username">{{ userStore.userInfo?.nickname || userStore.userInfo?.username }}</span>
-              <el-icon><ArrowDown /></el-icon>
-            </div>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item command="profile">个人信息</el-dropdown-item>
-                <el-dropdown-item command="password">修改密码</el-dropdown-item>
-                <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </div>
-      </el-header>
-
-      <el-main class="layout-main">
-        <router-view v-slot="{ Component }">
-          <transition name="fade" mode="out-in">
-            <component :is="Component" />
+  <el-config-provider :locale="epLocale">
+    <el-container class="layout-container">
+      <el-aside :width="isCollapse ? '64px' : '220px'" class="layout-aside">
+        <div class="logo-area" @click="$router.push('/dashboard')">
+          <div class="logo-icon">
+            <span class="logo-g">G</span>
+          </div>
+          <transition name="fade">
+            <span v-show="!isCollapse" class="logo-text">GlobalTrade</span>
           </transition>
-        </router-view>
-      </el-main>
+        </div>
+        <el-menu
+          :default-active="activeMenu"
+          :collapse="isCollapse"
+          :collapse-transition="false"
+          router
+          background-color="transparent"
+          text-color="#8FA3BE"
+          active-text-color="#00D4FF"
+        >
+          <el-menu-item index="/dashboard">
+            <el-icon><DataBoard /></el-icon>
+            <template #title>{{ $t('nav.dashboard') }}</template>
+          </el-menu-item>
+
+          <el-sub-menu index="products-menu">
+            <template #title>
+              <el-icon><Goods /></el-icon>
+              <span>{{ $t('nav.products') }}</span>
+            </template>
+            <el-menu-item index="/products">{{ $t('nav.productList') }}</el-menu-item>
+            <el-menu-item index="/products/new">{{ $t('nav.productsNew') }}</el-menu-item>
+          </el-sub-menu>
+
+          <el-menu-item index="/orders">
+            <el-icon><List /></el-icon>
+            <template #title>{{ $t('nav.orderList') }}</template>
+          </el-menu-item>
+
+          <el-menu-item index="/analytics">
+            <el-icon><TrendCharts /></el-icon>
+            <template #title>{{ $t('nav.analytics') }}</template>
+          </el-menu-item>
+
+          <el-sub-menu index="selection-menu">
+            <template #title>
+              <el-icon><Search /></el-icon>
+              <span>{{ $t('nav.selection') }}</span>
+            </template>
+            <el-menu-item index="/selection/competitors">{{ $t('nav.competitors') }}</el-menu-item>
+            <el-menu-item index="/selection/trending">{{ $t('nav.trending') }}</el-menu-item>
+            <el-menu-item index="/selection/suggestions">{{ $t('nav.suggestions') }}</el-menu-item>
+          </el-sub-menu>
+
+          <el-menu-item index="/customers">
+            <el-icon><User /></el-icon>
+            <template #title>{{ $t('nav.customerList') }}</template>
+          </el-menu-item>
+
+          <el-sub-menu v-if="userStore.role === 'admin'" index="system-menu">
+            <template #title>
+              <el-icon><Setting /></el-icon>
+              <span>{{ $t('nav.system') }}</span>
+            </template>
+            <el-menu-item index="/system/users">{{ $t('nav.userManagement') }}</el-menu-item>
+            <el-menu-item index="/system/roles">{{ $t('nav.roleManagement') }}</el-menu-item>
+            <el-menu-item index="/system/logs">{{ $t('nav.operationLogs') }}</el-menu-item>
+          </el-sub-menu>
+        </el-menu>
+      </el-aside>
+
+      <el-container>
+        <el-header class="layout-header">
+          <div class="header-left">
+            <el-icon class="collapse-btn" :size="20" @click="isCollapse = !isCollapse">
+              <Fold v-if="!isCollapse" />
+              <Expand v-else />
+            </el-icon>
+            <el-breadcrumb separator="/">
+              <el-breadcrumb-item :to="{ path: '/dashboard' }">{{ $t('nav.dashboard') }}</el-breadcrumb-item>
+              <el-breadcrumb-item v-if="$route.meta.title">{{ $t('nav.' + $route.meta.title) }}</el-breadcrumb-item>
+            </el-breadcrumb>
+          </div>
+          <div class="header-right">
+            <el-dropdown trigger="click" @command="handleCommand">
+              <div class="lang-switch">
+                <el-icon><Location /></el-icon>
+                <span>{{ currentLang === 'zh' ? '中文' : 'EN' }}</span>
+              </div>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item command="zh" :class="{ 'is-active': currentLang === 'zh' }">中文</el-dropdown-item>
+                  <el-dropdown-item command="en" :class="{ 'is-active': currentLang === 'en' }">English</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+            <el-dropdown trigger="click" @command="handleUserCommand">
+              <div class="user-info">
+                <el-avatar :size="32" :style="{ background: 'linear-gradient(135deg, #00D4FF, #3B82F6)' }">
+                  {{ userStore.userInfo?.nickname?.[0]?.toUpperCase() || 'U' }}
+                </el-avatar>
+                <span class="username">{{ userStore.userInfo?.nickname || userStore.userInfo?.username }}</span>
+                <el-icon><ArrowDown /></el-icon>
+              </div>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item command="profile">{{ $t('user.profile') }}</el-dropdown-item>
+                  <el-dropdown-item command="password">{{ $t('user.password') }}</el-dropdown-item>
+                  <el-dropdown-item divided command="logout">{{ $t('user.logout') }}</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+        </el-header>
+
+        <el-main class="layout-main">
+          <router-view v-slot="{ Component }">
+            <transition name="fade" mode="out-in">
+              <component :is="Component" />
+            </transition>
+          </router-view>
+        </el-main>
+      </el-container>
     </el-container>
-  </el-container>
+  </el-config-provider>
 </template>
 
 <script setup>
@@ -124,16 +132,24 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/user'
 import { ElMessageBox } from 'element-plus'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+import en from 'element-plus/es/locale/lang/en'
 
 const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 
 const isCollapse = ref(false)
-const currentLang = ref(localale.value)
+const currentLang = ref(locale.value)
+
+const epLocale = computed(() => (locale.value === 'zh' ? zhCn : en))
 
 const activeMenu = computed(() => route.path)
+
+watch(locale, (v) => {
+  currentLang.value = v
+})
 
 function handleCommand(cmd) {
   if (cmd === 'zh') {
@@ -148,7 +164,7 @@ function handleCommand(cmd) {
 
 function handleUserCommand(cmd) {
   if (cmd === 'logout') {
-    ElMessageBox.confirm('确认退出登录？', '提示', {
+    ElMessageBox.confirm(t('user.confirmLogout'), t('user.tip'), {
       type: 'warning'
     }).then(() => {
       userStore.logout()

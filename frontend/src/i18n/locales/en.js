@@ -27,6 +27,7 @@ export default {
     productsNew: 'New Product',
     orders: 'Orders',
     orderList: 'Order List',
+    detail: 'Order Detail',
     analytics: 'Analytics',
     selection: 'Selection',
     competitors: 'Competitors',
@@ -34,6 +35,7 @@ export default {
     suggestions: 'Suggestions',
     customers: 'Customers',
     customerList: 'Customer List',
+    customerDetail: 'Customer Detail',
     system: 'System',
     userManagement: 'Users',
     roleManagement: 'Roles',
@@ -46,7 +48,21 @@ export default {
     password: 'Password',
     login: 'Sign In',
     welcome: 'Welcome Back',
+    tip: 'Please login to your account',
+    feature1: 'Real-time Data',
+    feature2: 'Full Tracking',
+    feature3: 'Multi-channel Aggregation',
+    success: 'Login successful',
+    usernameRequired: 'Please enter username',
+    passwordRequired: 'Please enter password',
     footer: '© 2024 GlobalTrade. All rights reserved.'
+  },
+  user: {
+    profile: 'Profile',
+    password: 'Change Password',
+    logout: 'Logout',
+    confirmLogout: 'Confirm to logout?',
+    tip: 'Tip'
   },
   dashboard: {
     title: 'Dashboard',

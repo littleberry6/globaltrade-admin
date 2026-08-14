@@ -1,115 +1,123 @@
 <template>
-  <div class="login-page">
-    <div class="bg-animation">
-      <div class="circle c1"></div>
-      <div class="circle c2"></div>
-      <div class="circle c3"></div>
-      <div class="grid-bg"></div>
-    </div>
-
-    <div class="login-container">
-      <div class="brand-section">
-        <div class="brand-logo">
-          <span class="logo-icon">G</span>
-        </div>
-        <h1 class="brand-title">{{ $t('login.title') }}</h1>
-        <p class="brand-subtitle">{{ $t('login.subtitle') }}</p>
-        <div class="brand-features">
-          <div class="feature-item">
-            <el-icon><DataAnalysis /></el-icon>
-            <span>实时数据</span>
-          </div>
-          <div class="feature-item">
-            <el-icon><Connection /></el-icon>
-            <span>全链路追踪</span>
-          </div>
-          <div class="feature-item">
-            <el-icon><Promotion /></el-icon>
-            <span>多渠道聚合</span>
-          </div>
-        </div>
+  <el-config-provider :locale="epLocale">
+    <div class="login-page">
+      <div class="bg-animation">
+        <div class="circle c1"></div>
+        <div class="circle c2"></div>
+        <div class="circle c3"></div>
+        <div class="grid-bg"></div>
       </div>
 
-      <div class="login-form-container">
-        <div class="login-header">
-          <h2>{{ $t('login.welcome') }}</h2>
-          <p>请登录您的账号</p>
+      <div class="login-container">
+        <div class="brand-section">
+          <div class="brand-logo">
+            <span class="logo-icon">G</span>
+          </div>
+          <h1 class="brand-title">{{ $t('login.title') }}</h1>
+          <p class="brand-subtitle">{{ $t('login.subtitle') }}</p>
+          <div class="brand-features">
+            <div class="feature-item">
+              <el-icon><DataAnalysis /></el-icon>
+              <span>{{ $t('login.feature1') }}</span>
+            </div>
+            <div class="feature-item">
+              <el-icon><Connection /></el-icon>
+              <span>{{ $t('login.feature2') }}</span>
+            </div>
+            <div class="feature-item">
+              <el-icon><Promotion /></el-icon>
+              <span>{{ $t('login.feature3') }}</span>
+            </div>
+          </div>
         </div>
 
-        <el-form
-          ref="formRef"
-          :model="form"
-          :rules="rules"
-          class="login-form"
-          @keyup.enter="handleLogin"
-        >
-          <el-form-item prop="username">
-            <el-input
-              v-model="form.username"
-              :placeholder="$t('login.username')"
-              size="large"
-              clearable
-            >
-              <template #prefix>
-                <el-icon><User /></el-icon>
-              </template>
-            </el-input>
-          </el-form-item>
+        <div class="login-form-container">
+          <div class="login-header">
+            <h2>{{ $t('login.welcome') }}</h2>
+            <p>{{ $t('login.tip') }}</p>
+          </div>
 
-          <el-form-item prop="password">
-            <el-input
-              v-model="form.password"
-              type="password"
-              :placeholder="$t('login.password')"
-              size="large"
-              show-password
-            >
-              <template #prefix>
-                <el-icon><Lock /></el-icon>
-              </template>
-            </el-input>
-          </el-form-item>
-
-          <el-button
-            type="primary"
-            size="large"
-            class="login-btn"
-            :loading="loading"
-            @click="handleLogin"
+          <el-form
+            ref="formRef"
+            :model="form"
+            :rules="rules"
+            class="login-form"
+            @keyup.enter="handleLogin"
           >
-            {{ $t('login.login') }}
-          </el-button>
-        </el-form>
+            <el-form-item prop="username">
+              <el-input
+                v-model="form.username"
+                :placeholder="$t('login.username')"
+                size="large"
+                clearable
+              >
+                <template #prefix>
+                  <el-icon><User /></el-icon>
+                </template>
+              </el-input>
+            </el-form-item>
 
-        <div class="login-footer">
-          <span>{{ $t('login.footer') }}</span>
+            <el-form-item prop="password">
+              <el-input
+                v-model="form.password"
+                type="password"
+                :placeholder="$t('login.password')"
+                size="large"
+                show-password
+              >
+                <template #prefix>
+                  <el-icon><Lock /></el-icon>
+                </template>
+              </el-input>
+            </el-form-item>
+
+            <el-button
+              type="primary"
+              size="large"
+              class="login-btn"
+              :loading="loading"
+              @click="handleLogin"
+            >
+              {{ $t('login.login') }}
+            </el-button>
+          </el-form>
+
+          <div class="login-footer">
+            <span>{{ $t('login.footer') }}</span>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </el-config-provider>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/user'
 import { ElMessage } from 'element-plus'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+import en from 'element-plus/es/locale/lang/en'
 
 const router = useRouter()
 const userStore = useUserStore()
+const { locale, t } = useI18n()
 
 const formRef = ref(null)
 const loading = ref(false)
+
+const epLocale = computed(() => (locale.value === 'zh' ? zhCn : en))
 
 const form = reactive({
   username: 'admin',
   password: 'admin123'
 })
 
-const rules = {
-  username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-  password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
-}
+const rules = computed(() => ({
+  username: [{ required: true, message: t('login.usernameRequired'), trigger: 'blur' }],
+  password: [{ required: true, message: t('login.passwordRequired'), trigger: 'blur' }]
+}))
 
 async function handleLogin() {
   try {
@@ -117,7 +125,7 @@ async function handleLogin() {
     loading.value = true
     const res = await userStore.login(form)
     if (res.code === 200) {
-      ElMessage.success('登录成功')
+      ElMessage.success(t('login.success'))
       router.push({ name: 'Dashboard' })
     }
   } catch (e) {

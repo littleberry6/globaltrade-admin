@@ -27,6 +27,7 @@ export default {
     productsNew: '新建产品',
     orders: '订单管理',
     orderList: '订单列表',
+    detail: '订单详情',
     analytics: '数据统计',
     selection: '选品分析',
     competitors: '竞品监控',
@@ -34,6 +35,7 @@ export default {
     suggestions: '智能建议',
     customers: '客户管理',
     customerList: '客户列表',
+    customerDetail: '客户详情',
     system: '系统管理',
     userManagement: '用户管理',
     roleManagement: '角色权限',
@@ -46,7 +48,21 @@ export default {
     password: '密码',
     login: '登 录',
     welcome: '欢迎回来',
+    tip: '请登录您的账号',
+    feature1: '实时数据',
+    feature2: '全链路追踪',
+    feature3: '多渠道聚合',
+    success: '登录成功',
+    usernameRequired: '请输入用户名',
+    passwordRequired: '请输入密码',
     footer: '© 2024 GlobalTrade. All rights reserved.'
+  },
+  user: {
+    profile: '个人信息',
+    password: '修改密码',
+    logout: '退出登录',
+    confirmLogout: '确认退出登录？',
+    tip: '提示'
   },
   dashboard: {
     title: '数据看板',
